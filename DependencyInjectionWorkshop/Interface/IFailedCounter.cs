@@ -1,4 +1,4 @@
-﻿namespace DependencyInjectionWorkshop.Models
+﻿namespace DependencyInjectionWorkshop.Interface
 {
 	public interface IFailedCounter
 	{

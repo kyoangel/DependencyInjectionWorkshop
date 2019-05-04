@@ -6,7 +6,7 @@ namespace DependencyInjectionWorkshop.Models
 {
 	public class OptService : IOtp
 	{
-		public string GetCurrentOtp(string accountId)
+		public string Get(string accountId)
 		{
 			var apiResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/otps", accountId).Result;
 			string currentOtp;

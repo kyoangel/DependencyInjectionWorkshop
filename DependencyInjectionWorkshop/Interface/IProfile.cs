@@ -2,6 +2,6 @@
 {
 	public interface IProfile
 	{
-		string GetPasswordFromDb(string accountId);
+		string GetPassword(string accountId);
 	}
 }

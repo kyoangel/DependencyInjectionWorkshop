@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using DependencyInjectionWorkshop.Exception;
+using DependencyInjectionWorkshop.Interface;
 
 namespace DependencyInjectionWorkshop.Models
 {

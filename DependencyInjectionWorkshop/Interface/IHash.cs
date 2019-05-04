@@ -1,7 +1,7 @@
 ﻿namespace DependencyInjectionWorkshop.Interface
 {
-	public interface IOtp
+	public interface IHash
 	{
-		string Get(string accountId);
+		string GetHash(string password);
 	}
 }

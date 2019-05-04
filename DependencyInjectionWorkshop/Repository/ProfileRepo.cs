@@ -8,7 +8,7 @@ namespace DependencyInjectionWorkshop.Repository
 {
 	public class ProfileRepo : IProfile
 	{
-		public string GetPasswordFromDb(string accountId)
+		public string GetPassword(string accountId)
 		{
 			var passwordFromDb = string.Empty;
 			using (var connection = new SqlConnection("my connection string"))

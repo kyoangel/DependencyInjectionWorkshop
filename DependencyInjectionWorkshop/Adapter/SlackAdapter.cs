@@ -1,4 +1,5 @@
-﻿using SlackAPI;
+﻿using DependencyInjectionWorkshop.Interface;
+using SlackAPI;
 
 namespace DependencyInjectionWorkshop.Adapter
 {

@@ -38,11 +38,11 @@ namespace DependencyInjectionWorkshop.Models
 		{
 			_failedCounter.EnsureUserNotLocked(accountId);
 
-			var passwordFromDb = _profile.GetPasswordFromDb(accountId);
+			var passwordFromDb = _profile.GetPassword(accountId);
 
-			var hashedPassword = _hash.GetHashedPassword(password);
+			var hashedPassword = _hash.GetHash(password);
 
-			var currentOtp = _optService.GetCurrentOtp(accountId);
+			var currentOtp = _optService.Get(accountId);
 
 			if (passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
 				currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))

@@ -1,10 +1,11 @@
 ﻿using System.Text;
+using DependencyInjectionWorkshop.Interface;
 
 namespace DependencyInjectionWorkshop.Adapter
 {
 	public class Sha256Adapter : IHash
 	{
-		public string GetHashedPassword(string password)
+		public string GetHash(string password)
 		{
 			var crypt = new System.Security.Cryptography.SHA256Managed();
 			var hash = new StringBuilder();

@@ -1,4 +1,4 @@
-﻿namespace DependencyInjectionWorkshop.Adapter
+﻿namespace DependencyInjectionWorkshop.Interface
 {
 	public interface INotification
 	{
