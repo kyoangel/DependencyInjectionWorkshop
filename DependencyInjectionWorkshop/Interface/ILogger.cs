@@ -2,6 +2,6 @@
 {
 	public interface ILogger
 	{
-		void Info(string accountId, int failedCount);
+		void Info(string message);
 	}
 }

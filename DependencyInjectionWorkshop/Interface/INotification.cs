@@ -2,6 +2,6 @@
 {
 	public interface INotification
 	{
-		void PostMessage();
+		void PostMessage(string message);
 	}
 }

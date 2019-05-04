@@ -57,9 +57,9 @@ namespace DependencyInjectionWorkshop.Models
 
 				var failedCount = _failedCounter.Get(accountId);
 
-				_logger.Info(accountId, failedCount);
+				_logger.Info($"AccountId:{accountId}, FailedCount:{failedCount}");
 
-				_notification.PostMessage();
+				_notification.PostMessage("my message");
 
 				return false;
 			}
