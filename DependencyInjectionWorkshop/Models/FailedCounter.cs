@@ -34,11 +34,5 @@ namespace DependencyInjectionWorkshop.Models
 			var failedCount = getFailedCountResponse.Content.ReadAsAsync<int>().Result;
 			return failedCount;
 		}
-
-		public void LogFailedCountInfo(string accountId, int failedCount)
-		{
-			var logger = NLog.LogManager.GetCurrentClassLogger();
-			logger.Info($"AccountId:{accountId}, FailedCount:{failedCount}");
-		}
 	}
 }
