@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SlackAPI;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -27,25 +28,24 @@ namespace DependencyInjectionWorkshop.Models
 				hash.Append(theByte.ToString("x2"));
 			}
 
-			if (!passwordFromDb.Equals(hash.ToString(), StringComparison.OrdinalIgnoreCase))
-			{
-				return false;
-			}
-
 			var httpClient = new HttpClient() { BaseAddress = new Uri("http://joey.com/") };
 			var response = httpClient.PostAsJsonAsync("api/otps", accountId).Result;
-			string result;
+			string currentOtp;
 			if (response.IsSuccessStatusCode)
 			{
-				result = response.Content.ReadAsAsync<string>().Result;
+				currentOtp = response.Content.ReadAsAsync<string>().Result;
 			}
 			else
 			{
 				throw new Exception($"web api error, accountId:{accountId}");
 			}
 
-			if (!result.Equals(otp, StringComparison.OrdinalIgnoreCase))
+			var hashedPassword = hash.ToString();
+			if (!passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase)
+				|| !currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
 			{
+				var slackClient = new SlackClient("my api token");
+				slackClient.PostMessage(response1 => { }, "my channel", "my message", "my bot name");
 				return false;
 			}
 
