@@ -2,9 +2,9 @@
 
 namespace DependencyInjectionWorkshop.Adapter
 {
-	public class Sha256Adapter
+	public class Sha256Adapter : IHash
 	{
-		public  string GetHashedPassword(string password)
+		public string GetHashedPassword(string password)
 		{
 			var crypt = new System.Security.Cryptography.SHA256Managed();
 			var hash = new StringBuilder();

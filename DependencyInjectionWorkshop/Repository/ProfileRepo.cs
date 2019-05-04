@@ -2,10 +2,11 @@
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
+using DependencyInjectionWorkshop.Interface;
 
 namespace DependencyInjectionWorkshop.Repository
 {
-	public class ProfileRepo
+	public class ProfileRepo : IProfile
 	{
 		public string GetPasswordFromDb(string accountId)
 		{

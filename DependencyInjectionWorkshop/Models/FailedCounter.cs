@@ -4,7 +4,7 @@ using DependencyInjectionWorkshop.Exception;
 
 namespace DependencyInjectionWorkshop.Models
 {
-	public class FailedCounter
+	public class FailedCounter : IFailedCounter
 	{
 		public void EnsureUserNotLocked(string accountId)
 		{
@@ -16,21 +16,21 @@ namespace DependencyInjectionWorkshop.Models
 			}
 		}
 
-		public void ResetFailedCount(string accountId)
+		public void Reset(string accountId)
 		{
 			var resetResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/Reset", accountId).Result;
 			resetResponse.EnsureSuccessStatusCode();
 		}
 
-		public void AddFailedCount(string accountId)
+		public void Add(string accountId)
 		{
 			var addFailedResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/Add", accountId).Result;
 			addFailedResponse.EnsureSuccessStatusCode();
 		}
 
-		public int GetFailedCount(string accountId)
+		public int Get(string accountId)
 		{
-			var getFailedCountResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/GetFailedCount", accountId).Result;
+			var getFailedCountResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/Get", accountId).Result;
 			getFailedCountResponse.EnsureSuccessStatusCode();
 			var failedCount = getFailedCountResponse.Content.ReadAsAsync<int>().Result;
 			return failedCount;
