@@ -13,6 +13,14 @@ namespace DependencyInjectionWorkshop.Models
 	{
 		public bool Verify(string accountId, string password, string otp)
 		{
+			HttpClient httpClient = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") };
+			var isLockedResponse = httpClient.PostAsJsonAsync("api/failedCounter/IsLock", accountId).Result;
+			isLockedResponse.EnsureSuccessStatusCode();
+			if (isLockedResponse.Content.ReadAsAsync<bool>().Result)
+			{
+				throw new FailedTooManyTimesException();
+			}
+
 			var passwordFromDb = string.Empty;
 			using (var connection = new SqlConnection("my connection string"))
 			{
@@ -28,12 +36,11 @@ namespace DependencyInjectionWorkshop.Models
 				hash.Append(theByte.ToString("x2"));
 			}
 
-			var httpClient = new HttpClient() { BaseAddress = new Uri("http://joey.com/") };
-			var response = httpClient.PostAsJsonAsync("api/otps", accountId).Result;
+			var apiResponse = httpClient.PostAsJsonAsync("api/otps", accountId).Result;
 			string currentOtp;
-			if (response.IsSuccessStatusCode)
+			if (apiResponse.IsSuccessStatusCode)
 			{
-				currentOtp = response.Content.ReadAsAsync<string>().Result;
+				currentOtp = apiResponse.Content.ReadAsAsync<string>().Result;
 			}
 			else
 			{
@@ -42,14 +49,21 @@ namespace DependencyInjectionWorkshop.Models
 
 			var hashedPassword = hash.ToString();
 			if (passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
-			    currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
+				currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
 			{
+				var resetResponse = httpClient.PostAsJsonAsync("api/failedCounter/Reset", accountId).Result;
+				resetResponse.EnsureSuccessStatusCode();
+
 				return true;
 			}
 			else
 			{
 				var slackClient = new SlackClient("my api token");
 				slackClient.PostMessage(response1 => { }, "my channel", "my message", "my bot name");
+
+				var addFailedResponse = httpClient.PostAsJsonAsync("api/failedCounter/Add", accountId).Result;
+				addFailedResponse.EnsureSuccessStatusCode();
+
 				return false;
 			}
 		}
