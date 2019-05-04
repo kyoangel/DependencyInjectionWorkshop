@@ -31,29 +31,26 @@ namespace DependencyInjectionWorkshopTests
 			_hash = Substitute.For<IHash>();
 			_notification = Substitute.For<INotification>();
 			_failedCounter = Substitute.For<IFailedCounter>();
-			_authenticationService = new AuthenticationService(_failedCounter, _profile, _hash, _optService, _logger, _notification);
+			_authenticationService =
+				new AuthenticationService(_failedCounter, _profile, _hash, _optService, _logger, _notification);
 		}
 
 		[Test]
-		public void is_valid()
+		public void Add_failedCount_when_user_is_valid()
 		{
-			GivenPassword(DefaultAccountId, DefaultHashedPassword);
-			GivenOtp(DefaultAccountId, DefaultOtp);
-			GivenHashed(DefaultPassword, DefaultHashedPassword);
+			WhenInvalid();
 
-			var isValid = WhenVerify(DefaultAccountId, DefaultPassword, DefaultOtp);
-
-			ShouldBeValid(isValid);
+			FailedCountShouldAdd();
 		}
 
-		private bool WhenValid()
+		[Test]
+		public void is_invalid_when_user_locked()
 		{
-			GivenPassword(DefaultAccountId, DefaultHashedPassword);
-			GivenOtp(DefaultAccountId, DefaultOtp);
-			GivenHashed(DefaultPassword, DefaultHashedPassword);
+			_failedCounter.When(x => x.EnsureUserNotLocked(Arg.Any<string>()))
+				.Do(x => throw new FailedTooManyTimesException());
 
-			var isValid = WhenVerify(DefaultAccountId, DefaultPassword, DefaultOtp);
-			return isValid;
+			Assert.Throws<FailedTooManyTimesException>(() =>
+				_authenticationService.Verify("lock_user", "any_pw", "any_otp"));
 		}
 
 		[Test]
@@ -68,11 +65,15 @@ namespace DependencyInjectionWorkshopTests
 		}
 
 		[Test]
-		public void Notify_user_when_is_invalid()
+		public void is_valid()
 		{
-			WhenInvalid();
+			GivenPassword(DefaultAccountId, DefaultHashedPassword);
+			GivenOtp(DefaultAccountId, DefaultOtp);
+			GivenHashed(DefaultPassword, DefaultHashedPassword);
 
-			ShouldNotifyUser();
+			var isValid = WhenVerify(DefaultAccountId, DefaultPassword, DefaultOtp);
+
+			ShouldBeValid(isValid);
 		}
 
 		[Test]
@@ -86,29 +87,39 @@ namespace DependencyInjectionWorkshopTests
 		}
 
 		[Test]
+		public void Notify_user_when_is_invalid()
+		{
+			WhenInvalid();
+
+			ShouldNotifyUser();
+		}
+
+		[Test]
 		public void Reset_failedCount_when_user_is_valid()
 		{
 			WhenValid();
 
+			FailedCountShouldReset();
+		}
+
+		private bool WhenValid()
+		{
+			GivenPassword(DefaultAccountId, DefaultHashedPassword);
+			GivenOtp(DefaultAccountId, DefaultOtp);
+			GivenHashed(DefaultPassword, DefaultHashedPassword);
+
+			var isValid = WhenVerify(DefaultAccountId, DefaultPassword, DefaultOtp);
+			return isValid;
+		}
+
+		private void FailedCountShouldReset()
+		{
 			_failedCounter.Received(1).Reset(Arg.Any<string>());
 		}
 
-		[Test]
-		public void Add_failedCount_when_user_is_valid()
+		private void FailedCountShouldAdd()
 		{
-			WhenInvalid();
-
 			_failedCounter.Received(1).Add(Arg.Any<string>());
-		}
-
-		[Test]
-		public void is_invalid_when_user_locked()
-		{
-			_failedCounter.When(x => x.EnsureUserNotLocked(Arg.Any<string>()))
-				.Do(x => throw new FailedTooManyTimesException());
-
-			Assert.Throws<FailedTooManyTimesException>(() =>
-				_authenticationService.Verify("lock_user", "any_pw", "any_otp"));
 		}
 
 		private static void ShouldBeInvalid(bool isValid)
