@@ -7,14 +7,11 @@ namespace DependencyInjectionWorkshop.Models
 {
 	public class FailedCounter : IFailedCounter
 	{
-		public void EnsureUserNotLocked(string accountId)
+		public bool EnsureUserNotLocked(string accountId)
 		{
 			var isLockedResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/EnsureUserNotLocked", accountId).Result;
 			isLockedResponse.EnsureSuccessStatusCode();
-			if (isLockedResponse.Content.ReadAsAsync<bool>().Result)
-			{
-				throw new FailedTooManyTimesException();
-			}
+			return isLockedResponse.Content.ReadAsAsync<bool>().Result;
 		}
 
 		public void Reset(string accountId)

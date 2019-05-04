@@ -1,18 +1,19 @@
-﻿using DependencyInjectionWorkshop.Adapter;
+﻿using System;
+using DependencyInjectionWorkshop.Adapter;
+using DependencyInjectionWorkshop.Exception;
 using DependencyInjectionWorkshop.Interface;
 using DependencyInjectionWorkshop.Repository;
-using System;
 
 namespace DependencyInjectionWorkshop.Models
 {
 	public class AuthenticationService
 	{
 		private readonly IFailedCounter _failedCounter;
-		private readonly IProfile _profile;
 		private readonly IHash _hash;
-		private readonly IOtp _optService;
 		private readonly ILogger _logger;
 		private readonly INotification _notification;
+		private readonly IOtp _optService;
+		private readonly IProfile _profile;
 
 		public AuthenticationService()
 		{
@@ -24,7 +25,8 @@ namespace DependencyInjectionWorkshop.Models
 			_notification = new SlackAdapter();
 		}
 
-		public AuthenticationService(IFailedCounter failedCounter, IProfile profile, IHash hash, IOtp optService, ILogger logger, INotification notification)
+		public AuthenticationService(IFailedCounter failedCounter, IProfile profile, IHash hash, IOtp optService,
+			ILogger logger, INotification notification)
 		{
 			_failedCounter = failedCounter;
 			_profile = profile;
@@ -36,7 +38,10 @@ namespace DependencyInjectionWorkshop.Models
 
 		public bool Verify(string accountId, string password, string otp)
 		{
-			_failedCounter.EnsureUserNotLocked(accountId);
+			if (_failedCounter.EnsureUserNotLocked(accountId))
+			{
+				throw new FailedTooManyTimesException();
+			}
 
 			var passwordFromDb = _profile.GetPassword(accountId);
 
@@ -45,24 +50,22 @@ namespace DependencyInjectionWorkshop.Models
 			var currentOtp = _optService.Get(accountId);
 
 			if (passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
-				currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
+			    currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
 			{
 				_failedCounter.Reset(accountId);
 
 				return true;
 			}
-			else
-			{
-				_failedCounter.Add(accountId);
 
-				var failedCount = _failedCounter.Get(accountId);
+			_failedCounter.Add(accountId);
 
-				_logger.Info($"AccountId:{accountId}, FailedCount:{failedCount}");
+			var failedCount = _failedCounter.Get(accountId);
 
-				_notification.PostMessage("my message");
+			_logger.Info($"AccountId:{accountId}, FailedCount:{failedCount}");
 
-				return false;
-			}
+			_notification.PostMessage("my message");
+
+			return false;
 		}
 	}
 }
