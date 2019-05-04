@@ -41,15 +41,17 @@ namespace DependencyInjectionWorkshop.Models
 			}
 
 			var hashedPassword = hash.ToString();
-			if (!passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase)
-				|| !currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
+			if (passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
+			    currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
+			{
+				return true;
+			}
+			else
 			{
 				var slackClient = new SlackClient("my api token");
 				slackClient.PostMessage(response1 => { }, "my channel", "my message", "my bot name");
 				return false;
 			}
-
-			return true;
 		}
 	}
 }
