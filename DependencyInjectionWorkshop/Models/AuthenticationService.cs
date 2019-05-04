@@ -1,4 +1,6 @@
 ﻿using System;
+using DependencyInjectionWorkshop.Adapter;
+using DependencyInjectionWorkshop.Repository;
 
 namespace DependencyInjectionWorkshop.Models
 {

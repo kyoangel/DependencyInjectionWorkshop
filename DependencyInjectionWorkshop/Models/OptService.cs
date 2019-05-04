@@ -15,7 +15,7 @@ namespace DependencyInjectionWorkshop.Models
 			}
 			else
 			{
-				throw new Exception($"web api error, accountId:{accountId}");
+				throw new System.Exception($"web api error, accountId:{accountId}");
 			}
 
 			return currentOtp;

@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 
-namespace DependencyInjectionWorkshop.Models
+namespace DependencyInjectionWorkshop.Repository
 {
 	public class ProfileRepo
 	{
