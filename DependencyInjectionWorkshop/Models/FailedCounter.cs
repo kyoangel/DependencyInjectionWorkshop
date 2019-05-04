@@ -5,9 +5,9 @@ namespace DependencyInjectionWorkshop.Models
 {
 	public class FailedCounter
 	{
-		public void IsLock(string accountId)
+		public void EnsureUserNotLocked(string accountId)
 		{
-			var isLockedResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/IsLock", accountId).Result;
+			var isLockedResponse = new HttpClient() { BaseAddress = new Uri("http://joey.dev/") }.PostAsJsonAsync("api/failedCounter/EnsureUserNotLocked", accountId).Result;
 			isLockedResponse.EnsureSuccessStatusCode();
 			if (isLockedResponse.Content.ReadAsAsync<bool>().Result)
 			{
