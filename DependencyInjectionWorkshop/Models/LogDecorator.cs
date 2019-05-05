@@ -4,13 +4,11 @@ namespace DependencyInjectionWorkshop.Models
 {
 	public class LogDecorator : AuthenticationBaseDecorator
 	{
-		private readonly IAuthenticationService _authenticationService;
 		private readonly ILogger _logger;
 		private readonly IFailedCounter _failedCounter;
 
 		public LogDecorator(IAuthenticationService authenticationService, ILogger logger, IFailedCounter failedCounter) : base(authenticationService)
 		{
-			_authenticationService = authenticationService;
 			_logger = logger;
 			_failedCounter = failedCounter;
 		}
@@ -24,7 +22,7 @@ namespace DependencyInjectionWorkshop.Models
 
 		public override bool Verify(string accountId, string password, string otp)
 		{
-			var isValid = _authenticationService.Verify(accountId, password, otp);
+			var isValid = base.Verify(accountId, password, otp);
 			if (!isValid)
 			{
 				LogMessage(accountId);

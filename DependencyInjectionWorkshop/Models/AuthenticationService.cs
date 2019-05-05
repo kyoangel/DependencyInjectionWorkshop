@@ -25,7 +25,6 @@ namespace DependencyInjectionWorkshop.Models
 			_optService = optService;
 		}
 
-
 		public bool Verify(string accountId, string password, string otp)
 		{
 			var passwordFromDb = _profile.GetPassword(accountId);
@@ -34,15 +33,9 @@ namespace DependencyInjectionWorkshop.Models
 
 			var currentOtp = _optService.Get(accountId);
 
-			if (passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
-				currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
-			{
-				return true;
-			}
-
-			//_logDecorator.LogMessage(accountId);
-
-			return false;
+			var isValid = passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
+						 currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase);
+			return isValid;
 		}
 	}
 }

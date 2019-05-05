@@ -79,12 +79,15 @@
     <Compile Include="Adapter\Sha256Adapter.cs" />
     <Compile Include="Adapter\SlackAdapter.cs" />
     <Compile Include="Exception\FailedTooManyTimesException.cs" />
+    <Compile Include="Interface\IApiCountQuota.cs" />
     <Compile Include="Interface\IFailedCounter.cs" />
     <Compile Include="Interface\IHash.cs" />
     <Compile Include="Interface\ILogger.cs" />
     <Compile Include="Interface\INotification.cs" />
     <Compile Include="Interface\IOtp.cs" />
     <Compile Include="Interface\IProfile.cs" />
+    <Compile Include="Models\ApiCallQuotaDecorator.cs" />
+    <Compile Include="Models\ApiCountQuota.cs" />
     <Compile Include="Models\AuthenticationBaseDecorator.cs" />
     <Compile Include="Models\AuthenticationService.cs" />
     <Compile Include="Models\FailedCountDecorator.cs" />
