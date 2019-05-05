@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyInjectionWorkshop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyConsole", "MyConsole\MyConsole.csproj", "{B01693F5-7D9B-4866-B8D9-844BDD76F93D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyInjectionWorkshopTests1", "DependencyInjectionWorkshopTests1\DependencyInjectionWorkshopTests1.csproj", "{57ABC3E7-90D9-4CE1-9D2D-1CD0FD6524D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B01693F5-7D9B-4866-B8D9-844BDD76F93D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B01693F5-7D9B-4866-B8D9-844BDD76F93D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B01693F5-7D9B-4866-B8D9-844BDD76F93D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57ABC3E7-90D9-4CE1-9D2D-1CD0FD6524D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57ABC3E7-90D9-4CE1-9D2D-1CD0FD6524D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57ABC3E7-90D9-4CE1-9D2D-1CD0FD6524D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57ABC3E7-90D9-4CE1-9D2D-1CD0FD6524D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

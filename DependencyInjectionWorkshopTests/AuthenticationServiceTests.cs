@@ -14,7 +14,7 @@ namespace DependencyInjectionWorkshopTests
 		private const string DefaultOtp = "99999";
 		private const string DefaultPassword = "1234qwer";
 		private const int DefaultFailedCount = 91;
-		private AuthenticationService _authenticationService;
+		private IAuthenticationService _authentication;
 		private IFailedCounter _failedCounter;
 		private IHash _hash;
 		private ILogger _logger;
@@ -31,8 +31,13 @@ namespace DependencyInjectionWorkshopTests
 			_hash = Substitute.For<IHash>();
 			_notification = Substitute.For<INotification>();
 			_failedCounter = Substitute.For<IFailedCounter>();
-			_authenticationService =
-				new AuthenticationService(_failedCounter, _profile, _hash, _optService, _logger, _notification);
+
+			var authenticationService = new AuthenticationService(_failedCounter, _profile, _hash, _optService, _logger);
+			var notificationDecorator = new NotificationDecorator(authenticationService, _notification);
+			var failedCountDecorator = new FailedCountDecorator(notificationDecorator, _failedCounter);
+			_authentication = failedCountDecorator;
+			//_authentication =
+			//	new AuthenticationService(_failedCounter, _profile, _hash, _optService, _logger);
 		}
 
 		[Test]
@@ -50,7 +55,7 @@ namespace DependencyInjectionWorkshopTests
 				.Do(x => throw new FailedTooManyTimesException());
 
 			Assert.Throws<FailedTooManyTimesException>(() =>
-				_authenticationService.Verify("lock_user", "any_pw", "any_otp"));
+				_authentication.Verify("lock_user", "any_pw", "any_otp"));
 		}
 
 		[Test]
@@ -139,7 +144,7 @@ namespace DependencyInjectionWorkshopTests
 
 		private bool WhenVerify(string defaultAccountId, string defaultPassword, string defaultOtp)
 		{
-			var isValid = _authenticationService.Verify(defaultAccountId, defaultPassword, defaultOtp);
+			var isValid = _authentication.Verify(defaultAccountId, defaultPassword, defaultOtp);
 			return isValid;
 		}
 

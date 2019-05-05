@@ -87,6 +87,8 @@
     <Compile Include="Interface\IProfile.cs" />
     <Compile Include="Models\AuthenticationService.cs" />
     <Compile Include="Models\FailedCounter.cs" />
+    <Compile Include="Models\IAuthenticationService.cs" />
+    <Compile Include="Models\NotificationDecorator.cs" />
     <Compile Include="Models\OptService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ProfileRepo.cs" />

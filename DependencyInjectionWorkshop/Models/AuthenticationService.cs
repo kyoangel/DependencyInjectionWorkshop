@@ -1,17 +1,43 @@
-﻿using System;
-using DependencyInjectionWorkshop.Adapter;
+﻿using DependencyInjectionWorkshop.Adapter;
 using DependencyInjectionWorkshop.Exception;
 using DependencyInjectionWorkshop.Interface;
 using DependencyInjectionWorkshop.Repository;
+using System;
 
 namespace DependencyInjectionWorkshop.Models
 {
-	public class AuthenticationService
+	public class FailedCountDecorator : IAuthenticationService
+	{
+		private readonly IAuthenticationService _authenticationService;
+		private readonly IFailedCounter _failedCounter;
+
+		public FailedCountDecorator(IAuthenticationService authenticationService, IFailedCounter failedCounter)
+		{
+			_authenticationService = authenticationService;
+			_failedCounter = failedCounter;
+		}
+
+		private void ResetFailedCount(string accountId)
+		{
+			if (_failedCounter.EnsureUserNotLocked(accountId))
+			{
+				throw new FailedTooManyTimesException();
+			}
+		}
+
+		public bool Verify(string accountId, string password, string otp)
+		{
+			ResetFailedCount(accountId);
+			var isValid = _authenticationService.Verify(accountId, password, otp);
+			return isValid;
+		}
+	}
+
+	public class AuthenticationService : IAuthenticationService
 	{
 		private readonly IFailedCounter _failedCounter;
 		private readonly IHash _hash;
 		private readonly ILogger _logger;
-		private readonly INotification _notification;
 		private readonly IOtp _optService;
 		private readonly IProfile _profile;
 
@@ -22,26 +48,21 @@ namespace DependencyInjectionWorkshop.Models
 			_hash = new Sha256Adapter();
 			_optService = new OptService();
 			_logger = new NLogAdapter();
-			_notification = new SlackAdapter();
 		}
 
 		public AuthenticationService(IFailedCounter failedCounter, IProfile profile, IHash hash, IOtp optService,
-			ILogger logger, INotification notification)
+			ILogger logger)
 		{
 			_failedCounter = failedCounter;
 			_profile = profile;
 			_hash = hash;
 			_optService = optService;
 			_logger = logger;
-			_notification = notification;
 		}
 
 		public bool Verify(string accountId, string password, string otp)
 		{
-			if (_failedCounter.EnsureUserNotLocked(accountId))
-			{
-				throw new FailedTooManyTimesException();
-			}
+			//_failedCountDecorator.ResetFailedCount(accountId);
 
 			var passwordFromDb = _profile.GetPassword(accountId);
 
@@ -50,7 +71,7 @@ namespace DependencyInjectionWorkshop.Models
 			var currentOtp = _optService.Get(accountId);
 
 			if (passwordFromDb.Equals(hashedPassword, StringComparison.OrdinalIgnoreCase) &&
-			    currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
+				currentOtp.Equals(otp, StringComparison.OrdinalIgnoreCase))
 			{
 				_failedCounter.Reset(accountId);
 
@@ -62,8 +83,6 @@ namespace DependencyInjectionWorkshop.Models
 			var failedCount = _failedCounter.Get(accountId);
 
 			_logger.Info($"AccountId:{accountId}, FailedCount:{failedCount}");
-
-			_notification.PostMessage("my message");
 
 			return false;
 		}
