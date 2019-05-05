@@ -85,6 +85,7 @@
     <Compile Include="Interface\INotification.cs" />
     <Compile Include="Interface\IOtp.cs" />
     <Compile Include="Interface\IProfile.cs" />
+    <Compile Include="Models\AuthenticationBaseDecorator.cs" />
     <Compile Include="Models\AuthenticationService.cs" />
     <Compile Include="Models\FailedCountDecorator.cs" />
     <Compile Include="Models\FailedCounter.cs" />
