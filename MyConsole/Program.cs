@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace MyConsole
 {
-    class Program
+	class Program
     {
         static void Main(string[] args)
         {
+	        var authentication = SimpleFactory.GetAuthenticationService();
+	        var isValid = authentication;
+
+			if (isValid)
+			{
+				
+			}
         }
     }
 }
