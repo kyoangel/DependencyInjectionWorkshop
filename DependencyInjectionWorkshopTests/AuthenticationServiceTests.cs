@@ -21,6 +21,7 @@ namespace DependencyInjectionWorkshopTests
 		private INotification _notification;
 		private IOtp _optService;
 		private IProfile _profile;
+		private IApiCountQuota _apiCountQuota;
 
 		[SetUp]
 		public void Setup()
@@ -31,12 +32,14 @@ namespace DependencyInjectionWorkshopTests
 			_hash = Substitute.For<IHash>();
 			_notification = Substitute.For<INotification>();
 			_failedCounter = Substitute.For<IFailedCounter>();
+			_apiCountQuota = Substitute.For<IApiCountQuota>();
 
 			var authenticationService = new AuthenticationService(_profile, _hash, _optService);
 			var notificationDecorator = new NotificationDecorator(authenticationService, _notification);
 			var failedCountDecorator = new FailedCountDecorator(notificationDecorator, _failedCounter);
 			var logDecorator = new LogDecorator(failedCountDecorator, _logger, _failedCounter);
-			_authentication = logDecorator;
+			var apiCallQuotaDecorator = new ApiCallQuotaDecorator(logDecorator, _apiCountQuota);
+			_authentication = apiCallQuotaDecorator;
 		}
 
 		[Test]
@@ -104,6 +107,14 @@ namespace DependencyInjectionWorkshopTests
 			WhenValid();
 
 			FailedCountShouldReset();
+		}
+
+		[Test]
+		public void Every_apiCall_will_add_api_count()
+		{
+			WhenValid();
+
+			_apiCountQuota.Received(1).Add(Arg.Any<string>());
 		}
 
 		private bool WhenValid()
