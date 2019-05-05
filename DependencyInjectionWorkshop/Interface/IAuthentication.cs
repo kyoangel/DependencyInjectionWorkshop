@@ -1,6 +1,6 @@
 ﻿namespace DependencyInjectionWorkshop.Interface
 {
-	public interface IAuthenticationService
+	public interface IAuthentication
 	{
 		bool Verify(string accountId, string password, string otp);
 	}

@@ -6,7 +6,7 @@ namespace DependencyInjectionWorkshop.Models
 	{
 		private readonly IApiCountQuota _apiCountQuota;
 
-		public ApiCallQuotaDecorator(IAuthenticationService authenticationService, IApiCountQuota apiCountQuota) : base(authenticationService)
+		public ApiCallQuotaDecorator(IAuthentication authenticationService, IApiCountQuota apiCountQuota) : base(authenticationService)
 		{
 			_apiCountQuota = apiCountQuota;
 		}

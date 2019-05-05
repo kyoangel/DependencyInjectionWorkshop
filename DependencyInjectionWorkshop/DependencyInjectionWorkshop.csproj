@@ -80,7 +80,7 @@
     <Compile Include="Adapter\SlackAdapter.cs" />
     <Compile Include="Exception\FailedTooManyTimesException.cs" />
     <Compile Include="Interface\IApiCountQuota.cs" />
-    <Compile Include="Interface\IAuthenticationService.cs" />
+    <Compile Include="Interface\IAuthentication.cs" />
     <Compile Include="Interface\IFailedCounter.cs" />
     <Compile Include="Interface\IHash.cs" />
     <Compile Include="Interface\ILogger.cs" />

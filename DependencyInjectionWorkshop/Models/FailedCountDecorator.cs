@@ -7,7 +7,7 @@ namespace DependencyInjectionWorkshop.Models
 	{
 		private readonly IFailedCounter _failedCounter;
 
-		public FailedCountDecorator(IAuthenticationService authenticationService, IFailedCounter failedCounter) : base(authenticationService)
+		public FailedCountDecorator(IAuthentication authenticationService, IFailedCounter failedCounter) : base(authenticationService)
 		{
 			_failedCounter = failedCounter;
 		}

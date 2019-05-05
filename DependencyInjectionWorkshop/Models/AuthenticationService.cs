@@ -5,7 +5,7 @@ using System;
 
 namespace DependencyInjectionWorkshop.Models
 {
-	public class AuthenticationService : IAuthenticationService
+	public class AuthenticationService : IAuthentication
 	{
 		private readonly IHash _hash;
 		private readonly IOtp _optService;
