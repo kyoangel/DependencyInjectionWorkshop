@@ -1,4 +1,6 @@
-﻿namespace DependencyInjectionWorkshop.Models
+﻿using DependencyInjectionWorkshop.Interface;
+
+namespace DependencyInjectionWorkshop.Models
 {
 	public class AuthenticationBaseDecorator : IAuthenticationService
 	{
